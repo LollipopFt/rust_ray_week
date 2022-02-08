@@ -6,6 +6,7 @@ fn main() {
     // render:
     println!("P3\n{IMAGEWIDTH} {IMAGEHEIGHT}\n255");
     for j in (0..IMAGEHEIGHT).rev() {
+        eprint!("scanlines remaining: {j}\r");
         for i in 0..IMAGEWIDTH {
             let r = i as f32 / (IMAGEWIDTH-1) as f32;
             let g = j as f32 / (IMAGEHEIGHT-1) as f32;
@@ -18,4 +19,5 @@ fn main() {
             println!("{ir} {ig} {ib}");
         }
     }
+    eprint!("\ndone.");
 }

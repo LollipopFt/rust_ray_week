@@ -4,16 +4,6 @@ use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub};
 pub struct Vec3(pub f64, pub f64, pub f64);
 
 impl Vec3 {
-    pub fn x(&self) -> f64 {
-        self.0
-    }
-    pub fn y(&self) -> f64 {
-        self.1
-    }
-    pub fn z(&self) -> f64 {
-        self.2
-    }
-
     pub fn length(&self) -> f64 {
         self.length_squared().sqrt()
     }

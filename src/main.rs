@@ -1,5 +1,10 @@
 use std::io::Write;
 
+mod vec3;
+use vec3::Vec3 as Color;
+mod color;
+use color::write_color;
+
 fn main() {
     // image:
     const IMAGEWIDTH: u16 = 256;
@@ -11,15 +16,12 @@ fn main() {
     for j in (0..IMAGEHEIGHT).rev() {
         eprint!("scanlines remaining: {j}\r");
         for i in 0..IMAGEWIDTH {
-            let r = i as f64 / (IMAGEWIDTH-1) as f64;
-            let g = j as f64 / (IMAGEHEIGHT-1) as f64;
-            let b = 0.25;
-
-            let ir: u8 = (255.999*r) as u8;
-            let ig: u8 = (255.999*g) as u8;
-            let ib: u8 = (255.999*b) as u8;
-
-            writeln!(handle, "{ir} {ig} {ib}").ok();
+            let pixel_color = Color(
+                i as f64/(IMAGEWIDTH-1) as f64,
+                j as f64/(IMAGEHEIGHT-1) as f64,
+                0.25
+            );
+            writeln!(handle, "{}", write_color(pixel_color)).ok();
         }
     }
     eprint!("\ndone.");

@@ -1,6 +1,6 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub};
 
-#[derive(Default)]
+#[derive(Clone, Copy, Default)]
 pub struct Vec3(pub f64, pub f64, pub f64);
 
 impl Vec3 {
@@ -24,12 +24,7 @@ impl Vec3 {
         )
     }
     pub fn unit_vector(self) -> Vec3 {
-        let length = self.length();
-        Vec3(
-            self.0/length,
-            self.1/length,
-            self.2/length
-        )
+        self/self.length()
     }
 }
 
@@ -64,7 +59,7 @@ impl DivAssign<f64> for Vec3 {
 impl Add for Vec3 {
     type Output = Self;
     fn add(self, other: Self) -> Self {
-        Self(self.0 + other.0, self.1 + other.1, self.2 + self.2)
+        Self(self.0 + other.0, self.1 + other.1, self.2 + other.2)
     }
 }
 impl Sub for Vec3 {
@@ -94,9 +89,6 @@ impl Mul<f64> for Vec3 {
 impl Div<f64> for Vec3 {
     type Output = Self;
     fn div(self, rhs: f64) -> Self {
-        if rhs == 0.0 {
-            panic!("Cannot divide by zero-valued `Rational`!");
-        }
         Self(self.0/rhs, self.1/rhs, self.2/rhs)
     }
 }

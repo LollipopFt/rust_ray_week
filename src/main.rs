@@ -9,21 +9,27 @@ use color::write_color;
 mod ray;
 use ray::Ray;
 
-fn hit_sphere(center: Point3, radius: f64, r: Ray) -> bool {
+fn hit_sphere(center: Point3, radius: f64, r: Ray) -> f64 {
     let oc: Vec3 = r.orig - center;
     let a = r.dir.dot(r.dir);
     let b = 2.0*oc.dot(r.dir);
     let c = oc.dot(oc) - radius*radius;
     let discriminant = b*b - 4.0*a*c;
-    discriminant > 0.0
+    if discriminant < 0.0 {
+        -1.0
+    } else {
+        (-b - discriminant.sqrt()) / (2.0*a)
+    }
 }
 
 fn ray_color(r: Ray) -> Color {
-    if hit_sphere(Point3(0.0, 0.0, -1.0), 0.5, r) {
-        Color(1.0, 0.0, 0.0)
+    let mut t = hit_sphere(Point3(0.0, 0.0, -1.0), 0.5, r);
+    if t > 0.0 {
+        let n: Vec3 = (r.at(t) - Vec3(0.0, 0.0, -1.0)).unit_vector();
+        0.5*Color(n.0+1.0, n.1+1.0, n.2+1.0)
     } else {
         let unit_dir: Vec3 = r.dir.unit_vector();
-        let t: f64 = 0.5*(unit_dir.1 + 1.0);
+        t = 0.5*(unit_dir.1 + 1.0);
         (1.0-t)*Color(1.0, 1.0, 1.0) + t*Color(0.5, 0.7, 1.0)
     }
 }

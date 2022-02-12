@@ -8,28 +8,20 @@ mod color;
 use color::write_color;
 mod ray;
 use ray::Ray;
+mod hittable;
+use hittable::{Hittable, HitRecord};
+mod hittable_list;
+use hittable_list::HitList;
+mod sphere;
+use sphere::Sphere;
 
-fn hit_sphere(center: Point3, radius: f64, r: Ray) -> f64 {
-    let oc: Vec3 = r.orig - center;
-    let a = r.dir.length_squared();
-    let half_b = oc.dot(r.dir);
-    let c = oc.length_squared() - radius*radius;
-    let discriminant = half_b*half_b - a*c;
-    if discriminant < 0.0 {
-        -1.0
-    } else {
-        (-half_b - discriminant.sqrt()) / a
-    }
-}
-
-fn ray_color(r: Ray) -> Color {
-    let mut t = hit_sphere(Point3(0.0, 0.0, -1.0), 0.5, r);
-    if t > 0.0 {
-        let n: Vec3 = (r.at(t) - Vec3(0.0, 0.0, -1.0)).unit_vector();
-        0.5*Color(n.0+1.0, n.1+1.0, n.2+1.0)
+fn ray_color(r: Ray, world: &dyn Hittable) -> Color {
+    let mut rec: HitRecord = Default::default();
+    if world.hit(&r, 0.0, std::f64::INFINITY, &mut rec) {
+        0.5*(rec.normal+Color(1.0, 1.0, 1.0))
     } else {
         let unit_dir: Vec3 = r.dir.unit_vector();
-        t = 0.5*(unit_dir.1 + 1.0);
+        let t = 0.5*(unit_dir.1 + 1.0);
         (1.0-t)*Color(1.0, 1.0, 1.0) + t*Color(0.5, 0.7, 1.0)
     }
 }
@@ -39,6 +31,17 @@ fn main() {
     const ASPECTRATIO: f64 = 16.0/9.0;
     const IMAGEWIDTH: u16 = 400;
     const IMAGEHEIGHT: u16 = (IMAGEWIDTH as f64/ASPECTRATIO) as u16;
+
+    // world:
+    let mut world: HitList = HitList(vec![]);
+    world.add(Box::new(Sphere {
+        cen: Point3(0.0, 0.0, -1.0),
+        r: 0.5
+    }));
+    world.add(Box::new(Sphere {
+        cen: Point3(0.0, -100.5, -1.0),
+        r: 100.0
+    }));
 
     // camera:
     const VIEWPORTHEIGHT: f64 = 2.0;
@@ -59,7 +62,7 @@ fn main() {
             let u = i as f64 / (IMAGEWIDTH-1) as f64;
             let v = j as f64 / (IMAGEHEIGHT-1) as f64;
             let r = Ray::new(origin, lowleft_corner + u*horizontal + v*vertical - origin);
-            let pixel_color = ray_color(r);
+            let pixel_color = ray_color(r, &world);
             writeln!(handle, "{}", write_color(pixel_color)).ok();
         }
     }

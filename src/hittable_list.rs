@@ -1,7 +1,16 @@
 use crate::ray::Ray;
 use crate::hittable::{Hittable, HitRecord};
 
-struct HitList(Vec<Box<dyn Hittable>>);
+pub struct HitList(pub Vec<Box<dyn Hittable>>);
+
+impl HitList {
+    pub fn add(&mut self, object: Box<dyn Hittable>) {
+        self.0.push(object);
+    }
+    pub fn clear(&mut self) {
+        self.0.clear();
+    }
+}
 
 impl Hittable for HitList {
     fn hit(&self, r: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {

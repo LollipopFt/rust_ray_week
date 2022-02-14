@@ -16,7 +16,8 @@ use vec3::Vec3 as Point3;
 fn ray_color(r: ray::Ray, world: &dyn hittable::Hittable) -> Color {
     let mut rec: hittable::HitRecord = Default::default();
     if world.hit(&r, 0.0, std::f64::INFINITY, &mut rec) {
-        0.5*(rec.normal+Color(1.0, 1.0, 1.0))
+        let target = rec.p + rec.normal + vec3::rand_inunitsphere();
+        0.5*ray_color(ray::Ray::new(rec.p, target-rec.p), world)
     } else {
         let unit_dir: Vec3 = r.dir.unit_vector();
         let t = 0.5*(unit_dir.1 + 1.0);

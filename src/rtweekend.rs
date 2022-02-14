@@ -8,7 +8,7 @@ pub fn random() -> f64 {
     thread_rng().gen::<f64>()
 }
 
-fn rand_double(min: f64, max: f64) -> f64 {
+pub fn rand_double(min: f64, max: f64) -> f64 {
     min + (max-min)*random()
 }
 

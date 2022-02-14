@@ -45,6 +45,10 @@ pub fn rand_inunitsphere() -> Vec3 {
     }
 }
 
+pub fn rand_unitvec() -> Vec3 {
+    rand_inunitsphere().unit_vector()
+}
+
 impl Neg for Vec3 {
     type Output = Self;
     fn neg(self) -> Self {

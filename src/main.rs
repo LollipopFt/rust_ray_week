@@ -17,7 +17,7 @@ fn ray_color(r: ray::Ray, world: &dyn hittable::Hittable, depth: u16) -> Color {
     let mut rec: hittable::HitRecord = Default::default();
     if depth == 0 {
         Color::default()
-    } else if world.hit(&r, 0.0, f64::INFINITY, &mut rec) {
+    } else if world.hit(&r, 0.001, f64::INFINITY, &mut rec) {
         let target = rec.p + rec.normal + vec3::rand_inunitsphere();
         0.5*ray_color(ray::Ray::new(rec.p, target-rec.p), world, depth-1)
     } else {

@@ -36,6 +36,15 @@ impl Vec3 {
     }
 }
 
+pub fn rand_inhemi(normal: Vec3) -> Vec3 {
+    let in_unitsphere = rand_inunitsphere();
+    if in_unitsphere.dot(normal) > 0.0 {
+        in_unitsphere
+    } else {
+        -in_unitsphere
+    }
+}
+
 pub fn rand_inunitsphere() -> Vec3 {
     loop {
         let p = Vec3::random(-1.0, 1.0);

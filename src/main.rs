@@ -19,8 +19,13 @@ fn ray_color(r: ray::Ray, world: &dyn hittable::Hittable, depth: u16) -> Color {
     if depth == 0 {
         Color::default()
     } else if world.hit(&r, 0.001, f64::INFINITY, &mut rec) {
-        let target = rec.p + rec.normal + vec3::rand_inhemi(rec.normal); // unitvec
-        0.5*ray_color(ray::Ray::new(rec.p, target-rec.p), world, depth-1)
+        let scattered: ray::Ray = Default::default();
+        let attentuatn: Color = Default::default();
+        if rec.material.scatter(&r, &rec, &mut attentuatn, &mut scattered) {
+            attentuatn*ray_color(scattered, world, depth-1)
+        } else {
+            Color::default()
+        }
     } else {
         let unit_dir: Vec3 = r.dir.unit_vector();
         let t = 0.5*(unit_dir.1 + 1.0);

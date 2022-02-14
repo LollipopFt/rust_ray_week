@@ -8,9 +8,9 @@ pub fn write_color(pixel_color: Color, samples_perpixel: u16) -> String {
 
     // divide color by number of samples
     let scale = 1.0/samples_perpixel as f64;
-    r*=scale;
-    g*=scale;
-    b*=scale;
+    r = (scale*r).sqrt();
+    g = (scale*g).sqrt();
+    b = (scale*b).sqrt();
 
     // write translated [0, 255] value of each color component
     format!(

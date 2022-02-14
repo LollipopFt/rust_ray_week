@@ -38,7 +38,7 @@ impl Vec3 {
 
 pub fn rand_inunitsphere() -> Vec3 {
     loop {
-        let p = Vec3::random(-1.0, -1.0);
+        let p = Vec3::random(-1.0, 1.0);
         if p.length_squared() >= 1.0 {} else {
             return p;
         }

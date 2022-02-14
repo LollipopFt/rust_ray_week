@@ -2,10 +2,12 @@ use crate::vec3::Vec3;
 use crate::vec3::Vec3 as Point3;
 use crate::hittable::{Hittable, HitRecord};
 use crate::ray::Ray;
+use crate::material::Material;
 
 pub struct Sphere {
     pub cen: Point3,
-    pub r: f64
+    pub r: f64,
+    pub m: Box<dyn Material>
 }
 
 impl Hittable for Sphere {
@@ -33,6 +35,7 @@ impl Hittable for Sphere {
         rec.p = r.at(rec.t);
         let outward_normal = (rec.p - self.cen) / self.r;
         rec.setface_normal(*r, outward_normal);
+        rec.material = self.m;
 
         true
     }

@@ -8,6 +8,7 @@ mod hittable_list;
 mod sphere;
 mod rtweekend;
 mod camera;
+mod material;
 
 use vec3::Vec3;
 use vec3::Vec3 as Color;

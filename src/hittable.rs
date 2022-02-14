@@ -1,11 +1,13 @@
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 use crate::vec3::Vec3 as Point3;
+use crate::material::Material;
 
 #[derive(Default)]
 pub struct HitRecord {
     pub p: Point3,
     pub normal: Vec3,
+    pub material: Box<dyn Material>,
     pub t: f64,
     pub front_face: bool
 }

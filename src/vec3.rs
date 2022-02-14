@@ -34,6 +34,11 @@ impl Vec3 {
     fn random(min: f64, max: f64) -> Self {
         Vec3(rand_double(min, max), rand_double(min, max), rand_double(min, max))
     }
+
+    pub fn near_zero(&self) -> bool {
+        let s = 0.00000001;
+        (self.0.abs() < s) && (self.1.abs() < s) && (self.2.abs() < s)
+    }
 }
 
 pub fn rand_inhemi(normal: Vec3) -> Vec3 {

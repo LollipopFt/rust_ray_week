@@ -7,3 +7,7 @@ edition = "2021"
 
 [dependencies.rand]
 version = "*"
+
+[profile.release]
+lto = "fat"
+panic = "abort"

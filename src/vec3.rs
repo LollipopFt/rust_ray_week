@@ -40,7 +40,7 @@ impl Vec3 {
         (self.0.abs() < s) && (self.1.abs() < s) && (self.2.abs() < s)
     }
 
-    fn reflect(&self, other: Self) -> Self {
+    pub fn reflect(&self, other: Self) -> Self {
         *self - 2.0*self.dot(other)*other
     }
 }

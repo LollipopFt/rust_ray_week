@@ -14,13 +14,13 @@ use vec3::Vec3;
 use vec3::Vec3 as Color;
 use vec3::Vec3 as Point3;
 
-fn ray_color(r: ray::Ray, world: &dyn hittable::Hittable, depth: u16) -> Color {
+fn ray_color(r: ray::Ray, world: &hittable::Hittable, depth: u16) -> Color {
     let mut rec: hittable::HitRecord = Default::default();
     if depth == 0 {
         Color::default()
     } else if world.hit(&r, 0.001, f64::INFINITY, &mut rec) {
-        let scattered: ray::Ray = Default::default();
-        let attentuatn: Color = Default::default();
+        let mut scattered: ray::Ray = Default::default();
+        let mut attentuatn: Color = Default::default();
         if rec.material.scatter(&r, &rec, &mut attentuatn, &mut scattered) {
             attentuatn*ray_color(scattered, world, depth-1)
         } else {
@@ -42,15 +42,40 @@ fn main() {
     const MAXDEPTH: u16 = 50;
 
     // world:
-    let mut world: hittable_list::HitList = hittable_list::HitList(vec![]);
-    world.add(Box::new(sphere::Sphere {
+    let mut world: hittable::Hittable = hittable::Hittable::HitList(hittable_list::HitList(vec![]));
+    let material_ground = material::Material::Lambertian(Color(0.8, 0.8, 0.0));
+    let material_center = material::Material::Lambertian(Color(0.7, 0.3, 0.3));
+    let material_left = material::Material::Metal(Color(0.8, 0.8, 0.8));
+    let material_right = material::Material::Metal(Color(0.8, 0.6, 0.2));
+
+    world.add(hittable::Hittable::Sphere(
+        sphere::Sphere {
+            cen: Point3(0.0, -100.5, -1.0),
+            r: 100.0,
+            m: material_ground
+        }
+    ));
+    world.add(hittable::Hittable::Sphere(
+        sphere::Sphere {
         cen: Point3(0.0, 0.0, -1.0),
-        r: 0.5
-    }));
-    world.add(Box::new(sphere::Sphere {
-        cen: Point3(0.0, -100.5, -1.0),
-        r: 100.0
-    }));
+        r: 0.5,
+        m: material_center
+        }
+    ));
+    world.add(hittable::Hittable::Sphere(
+        sphere::Sphere {
+        cen: Point3(-1.0, 0.0, -1.0),
+        r: 0.5,
+        m: material_left
+        }
+    ));
+    world.add(hittable::Hittable::Sphere(
+        sphere::Sphere {
+        cen: Point3(1.0, 0.0, -1.0),
+        r: 0.5,
+        m: material_right
+        }
+    ));
 
     // camera:
     let mut cam = camera::Camera::default();
